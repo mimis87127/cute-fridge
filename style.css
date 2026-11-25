@@ -399,3 +399,37 @@ button {
     font-size: 12px;
   }
 }
+
+/* 到期狀態共同樣式 */
+.expiry-status {
+  display: inline-block;
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* 已過期：紅色 */
+.expiry-status.expired {
+  color: #a52727;
+  background: #ffe0dc;
+}
+
+/* 3天內：橘色 */
+.expiry-status.expiring-soon {
+  color: #a64b16;
+  background: #ffead8;
+}
+
+/* 4～7天：黃色 */
+.expiry-status.expiring-warning {
+  color: #866000;
+  background: #fff2bd;
+}
+
+/* 正常 */
+.expiry-status.expiry-normal {
+  color: #77736b;
+  background: #f1efe9;
+}
