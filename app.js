@@ -22,16 +22,37 @@ const submitButton = itemForm.querySelector(
   'button[type="submit"]'
 );
 
+// 建立「新增物品」按鈕
+const addItemButton = document.createElement("button");
+addItemButton.type = "button";
+addItemButton.className = "add-item-button";
+addItemButton.textContent = "＋ 新增物品";
+addItemButton.hidden = true;
+
+itemForm.parentNode.insertBefore(addItemButton, itemForm);
+
+addItemButton.addEventListener("click", () => {
+  itemForm.hidden = false;
+  resetFormFields();
+  itemForm.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
+
 // 建立取消編輯按鈕
 const cancelButton = document.createElement("button");
 cancelButton.type = "button";
-cancelButton.textContent = "取消編輯";
+cancelButton.textContent = "取消";
+cancelButton.className = "cancel-button";
 cancelButton.hidden = true;
 itemForm.appendChild(cancelButton);
 
-cancelButton.addEventListener("click", resetForm);
+cancelButton.addEventListener("click", () => {
+  resetForm();
+});
 
-function resetForm() {
+function resetFormFields() {
   editingItemId = null;
   itemForm.reset();
 
@@ -39,13 +60,21 @@ function resetForm() {
   document.getElementById("itemUnit").value = "個";
 
   submitButton.textContent = "儲存物品";
+  cancelButton.hidden = false;
+}
+
+function resetForm() {
+  resetFormFields();
+  itemForm.hidden = true;
   cancelButton.hidden = true;
 }
 
 async function loadFridgeSections() {
   sectionTitle.textContent = "正在讀取冰箱資料...";
   itemsList.textContent = "請稍候";
+
   itemForm.hidden = true;
+  addItemButton.hidden = true;
 
   const { data, error } = await db
     .from("fridge_sections")
@@ -87,14 +116,16 @@ async function selectSection(sectionName) {
     sectionTitle.textContent = "找不到冰箱區域";
     itemsList.textContent = "請確認區域名稱是否正確。";
     itemForm.hidden = true;
+    addItemButton.hidden = true;
     return;
   }
 
   currentSection = section;
+
   resetForm();
+  addItemButton.hidden = false;
 
   sectionTitle.textContent = section.name;
-  itemForm.hidden = false;
 
   await loadItems();
 }
@@ -128,32 +159,36 @@ function renderItems(items) {
     return;
   }
 
-  items.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "item-card";
+  const list = document.createElement("ul");
+  list.className = "item-list";
 
-    const name = document.createElement("h3");
+  items.forEach(item => {
+    const row = document.createElement("li");
+    row.className = "item-row";
+
+    const main = document.createElement("div");
+    main.className = "item-main";
+
+    const name = document.createElement("div");
+    name.className = "item-name";
     name.textContent = item.name;
 
-    const details = document.createElement("p");
-    details.textContent =
-      `數量：${item.quantity} ${item.unit}`;
+    const summary = document.createElement("div");
+    summary.className = "item-summary";
 
-    const purchased = document.createElement("p");
-    purchased.textContent =
-      `購買日期：${item.purchased_at || "未填寫"}`;
+    const quantity = document.createElement("span");
+    quantity.textContent = `${item.quantity} ${item.unit}`;
 
-    const expires = document.createElement("p");
-    expires.textContent =
-      `到期日：${item.expires_at || "未填寫"}`;
+    const expiry = document.createElement("span");
+    expiry.textContent = item.expires_at
+      ? `到期：${item.expires_at}`
+      : "未設定到期日";
 
-    const opened = document.createElement("p");
-    opened.textContent =
-      `開封日期：${item.opened_at || "未填寫"}`;
+    summary.append(quantity, expiry);
+    main.append(name, summary);
 
-    const notes = document.createElement("p");
-    notes.textContent =
-      `備註：${item.notes || "無"}`;
+    const actions = document.createElement("div");
+    actions.className = "item-actions";
 
     const editButton = document.createElement("button");
     editButton.type = "button";
@@ -169,19 +204,12 @@ function renderItems(items) {
       deleteItem(item);
     });
 
-    card.append(
-      name,
-      details,
-      purchased,
-      expires,
-      opened,
-      notes,
-      editButton,
-      deleteButton
-    );
-
-    itemsList.appendChild(card);
+    actions.append(editButton, deleteButton);
+    row.append(main, actions);
+    list.appendChild(row);
   });
+
+  itemsList.appendChild(list);
 }
 
 function startEdit(item) {
@@ -201,6 +229,7 @@ function startEdit(item) {
 
   submitButton.textContent = "更新物品";
   cancelButton.hidden = false;
+  itemForm.hidden = false;
 
   itemForm.scrollIntoView({
     behavior: "smooth",
@@ -245,6 +274,8 @@ itemForm.addEventListener("submit", async event => {
   submitButton.disabled = true;
   cancelButton.disabled = true;
 
+  const wasEditing = Boolean(editingItemId);
+
   const newItem = {
     household_id: HOUSEHOLD_ID,
     section_id: currentSection.id,
@@ -278,7 +309,7 @@ itemForm.addEventListener("submit", async event => {
 
   let error;
 
-  if (editingItemId) {
+  if (wasEditing) {
     const result = await db
       .from("items")
       .update(newItem)
@@ -297,7 +328,7 @@ itemForm.addEventListener("submit", async event => {
   if (error) {
     alert("儲存失敗：" + error.message);
   } else {
-    alert(editingItemId ? "物品更新成功！" : "物品新增成功！");
+    alert(wasEditing ? "物品更新成功！" : "物品新增成功！");
     resetForm();
     await loadItems();
   }
