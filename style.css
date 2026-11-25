@@ -275,3 +275,127 @@ button {
     margin-top: 10px;
   }
 }
+
+/* 新增物品按鈕 */
+.add-item-button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border: none;
+  border-radius: 12px;
+  background: #dcefe5;
+  color: #355c49;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-item-button[hidden],
+#itemForm[hidden],
+.cancel-button[hidden] {
+  display: none !important;
+}
+
+/* 物品表單 */
+#itemForm {
+  margin: 14px 0;
+  padding: 16px;
+  border-radius: 14px;
+  background: #fffaf3;
+  border: 1px solid #eadfce;
+}
+
+#itemForm label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+#itemForm input,
+#itemForm textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d9d2c7;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* 精簡物品清單 */
+.item-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 4px;
+  border-bottom: 1px solid #e9e3d9;
+}
+
+.item-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.item-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #45413b;
+  overflow-wrap: anywhere;
+}
+
+.item-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 12px;
+  margin-top: 5px;
+  font-size: 13px;
+  color: #858078;
+}
+
+.item-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.item-actions button {
+  padding: 7px 10px;
+  border: 1px solid #ded8ce;
+  border-radius: 8px;
+  background: #fff;
+  color: #5c554b;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  margin-left: 8px;
+  padding: 10px 14px;
+  border: 1px solid #ded8ce;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .item-row {
+    gap: 6px;
+  }
+
+  .item-actions {
+    gap: 4px;
+  }
+
+  .item-actions button {
+    padding: 7px;
+    font-size: 12px;
+  }
+}
