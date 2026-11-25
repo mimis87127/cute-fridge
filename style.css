@@ -433,3 +433,19 @@ button {
   color: #77736b;
   background: #f1efe9;
 }
+
+/* 物品整列到期警示 */
+.item-row.expired {
+  background-color: #ffe1df;
+  border-radius: 10px;
+}
+
+.item-row.expiring-soon {
+  background-color: #ffead8;
+  border-radius: 10px;
+}
+
+.item-row.expiring-warning {
+  background-color: #fff4cc;
+  border-radius: 10px;
+}
