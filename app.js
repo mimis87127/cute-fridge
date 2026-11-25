@@ -12,6 +12,7 @@ const db = window.supabase.createClient(
 const sectionTitle = document.getElementById("sectionTitle");
 const itemsList = document.getElementById("itemsList");
 const zoneButtons = document.querySelectorAll(".fridge-zone");
+const itemForm = document.getElementById("itemForm");
 
 let fridgeSections = [];
 let currentSection = null;
@@ -19,6 +20,7 @@ let currentSection = null;
 async function loadFridgeSections() {
   sectionTitle.textContent = "正在讀取冰箱資料...";
   itemsList.textContent = "請稍候";
+  itemForm.hidden = true;
 
   const { data, error } = await db
     .from("fridge_sections")
@@ -59,20 +61,31 @@ async function selectSection(sectionName) {
   if (!section) {
     sectionTitle.textContent = "找不到冰箱區域";
     itemsList.textContent = "請確認區域名稱是否正確。";
+    itemForm.hidden = true;
     return;
   }
 
   currentSection = section;
 
   sectionTitle.textContent = section.name;
+  itemForm.hidden = false;
   itemsList.textContent = "正在讀取物品...";
+
+  await loadItems();
+}
+
+async function loadItems() {
+  if (!currentSection) return;
 
   const { data, error } = await db
     .from("items")
     .select("*")
     .eq("household_id", HOUSEHOLD_ID)
-    .eq("section_id", section.id)
-    .order("expires_at", { ascending: true, nullsFirst: false });
+    .eq("section_id", currentSection.id)
+    .order("expires_at", {
+      ascending: true,
+      nullsFirst: false
+    });
 
   if (error) {
     itemsList.textContent = "物品讀取失敗：" + error.message;
@@ -129,5 +142,65 @@ function renderItems(items) {
     itemsList.appendChild(card);
   });
 }
+
+itemForm.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!currentSection) {
+    alert("請先選擇冰箱區域。");
+    return;
+  }
+
+  const submitButton = itemForm.querySelector(
+    'button[type="submit"]'
+  );
+
+  submitButton.disabled = true;
+  submitButton.textContent = "正在儲存...";
+
+  const newItem = {
+    household_id: HOUSEHOLD_ID,
+    section_id: currentSection.id,
+    name: document.getElementById("itemName").value.trim(),
+    quantity: Number(
+      document.getElementById("itemQuantity").value
+    ),
+    unit: document.getElementById("itemUnit").value.trim(),
+    purchased_at:
+      document.getElementById("itemPurchasedAt").value || null,
+    expires_at:
+      document.getElementById("itemExpiresAt").value || null,
+    opened_at:
+      document.getElementById("itemOpenedAt").value || null,
+    notes:
+      document.getElementById("itemNotes").value.trim() || null
+  };
+
+  if (!newItem.name || !newItem.unit || newItem.quantity <= 0) {
+    alert("請確認物品名稱、數量及單位。");
+    submitButton.disabled = false;
+    submitButton.textContent = "儲存物品";
+    return;
+  }
+
+  const { error } = await db
+    .from("items")
+    .insert(newItem);
+
+  if (error) {
+    alert("儲存失敗：" + error.message);
+  } else {
+    alert("物品已成功新增！");
+    itemForm.reset();
+
+    document.getElementById("itemQuantity").value = 1;
+    document.getElementById("itemUnit").value = "個";
+
+    await loadItems();
+  }
+
+  submitButton.disabled = false;
+  submitButton.textContent = "儲存物品";
+});
 
 loadFridgeSections();
