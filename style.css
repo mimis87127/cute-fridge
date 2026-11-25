@@ -1,0 +1,277 @@
+
+/* =========================
+   1. 基本設定
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background: #eaf5f7;
+  color: #536777;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* =========================
+   2. 首頁標題
+========================= */
+
+.header {
+  max-width: 900px;
+  margin: 25px auto;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.header h1 {
+  margin: 0;
+  padding: 12px 45px;
+  background: #fffaf0;
+  border-radius: 50px;
+  color: #60758a;
+  font-size: 28px;
+  box-shadow: 0 5px 0 #d5e5e9;
+}
+
+#settingsBtn {
+  position: absolute;
+  right: 20px;
+  border: 3px solid #d3e2e9;
+  background: #fff;
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  font-size: 23px;
+}
+
+/* =========================
+   3. 主要版面
+========================= */
+
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 35px;
+}
+
+.fridge-area {
+  text-align: center;
+  flex: 1;
+  max-width: 520px;
+}
+
+.fridge-area h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.fridge-area p {
+  color: #8297a3;
+  margin-bottom: 25px;
+}
+
+/* =========================
+   4. 冰箱本體
+   保留五區原始配置
+========================= */
+
+.fridge {
+  width: 100%;
+  max-width: 390px;
+  margin: auto;
+  padding: 8px;
+  background: #fff9f1;
+  border: 5px solid #66534b;
+  border-radius: 22px;
+  box-shadow:
+    7px 9px 0 #d2e4e8,
+    inset 0 0 12px #e9ded1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* 每個冰箱區域 */
+
+.fridge-zone {
+  position: relative;
+  border: 3px solid #a99583;
+  background: #fffdf8;
+  color: #5c7183;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  font-size: 19px;
+  font-weight: bold;
+  transition: 0.2s;
+  padding: 12px;
+  box-shadow: inset 0 0 10px #f0e8dd;
+}
+
+.fridge-zone small {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+/* 上層冷藏室 */
+
+.top-zone {
+  height: 260px;
+  background: #fff5e9;
+  border-bottom: 6px solid #8d7869;
+  border-radius: 12px 12px 5px 5px;
+}
+
+/* 中間左右小抽屜 */
+
+.middle-small-zones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.middle-small-zones .fridge-zone {
+  height: 125px;
+  font-size: 17px;
+}
+
+/* 中層抽屜 */
+
+.middle-zone {
+  height: 150px;
+  background: #f6f1ff;
+}
+
+/* 下層抽屜 */
+
+.bottom-zone {
+  height: 190px;
+  background: #f0f8e9;
+  border-radius: 5px 5px 12px 12px;
+}
+
+/* =========================
+   5. 區域點擊效果
+========================= */
+
+.fridge-zone:hover {
+  transform: scale(1.025);
+  border-color: #75b9d4;
+  box-shadow: 0 0 0 4px #d9f0f6;
+}
+
+.fridge-zone:active {
+  transform: scale(0.98);
+}
+
+.fridge-zone.selected {
+  border: 4px solid #66b7d6;
+  background: #e7f6fb;
+  box-shadow: 0 0 0 4px #c8eaf5;
+}
+
+/* =========================
+   6. 物品清單
+========================= */
+
+.items-area {
+  flex: 1;
+  max-width: 380px;
+  min-height: 250px;
+  margin-top: 80px;
+  padding: 25px;
+  background: #fffaf3;
+  border: 3px solid #e4d9cb;
+  border-radius: 22px;
+  box-shadow: 0 6px 0 #d9e8e8;
+}
+
+.items-area h2 {
+  color: #627b8b;
+  font-size: 21px;
+  margin-top: 0;
+}
+
+.items-area p {
+  color: #9aaab1;
+  line-height: 1.8;
+}
+
+/* =========================
+   7. 手機版
+========================= */
+
+@media (max-width: 700px) {
+
+  .header {
+    margin: 10px auto;
+    padding: 10px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    padding: 12px 30px;
+  }
+
+  #settingsBtn {
+    right: 5px;
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+
+  .container {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .fridge-area {
+    width: 100%;
+  }
+
+  .fridge {
+    max-width: 340px;
+  }
+
+  .top-zone {
+    height: 220px;
+  }
+
+  .middle-small-zones .fridge-zone {
+    height: 110px;
+    font-size: 15px;
+  }
+
+  .middle-zone {
+    height: 130px;
+  }
+
+  .bottom-zone {
+    height: 160px;
+  }
+
+  .items-area {
+    width: 100%;
+    max-width: 340px;
+    margin-top: 10px;
+  }
+}
