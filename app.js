@@ -1,139 +1,133 @@
 
-/* =========================
-   1. Supabase 連線設定
-========================= */
-
-// 將下面兩個範例值換成你自己的資料
 const SUPABASE_URL = "https://dktjynncesewccybefel.supabase.co";
 const SUPABASE_KEY = "sb_publishable_agT4GAPO_nFlNWe8YO-VPQ_EkMiswzY";
 
-// 建立 Supabase 連線
+const HOUSEHOLD_ID = "4a0e22e1-c1e4-4f24-9f67-658e4667f36c";
+
 const db = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
 
-/* =========================
-   2. 網頁元素
-========================= */
-
-const zoneButtons = document.querySelectorAll(".fridge-zone");
 const sectionTitle = document.getElementById("sectionTitle");
 const itemsList = document.getElementById("itemsList");
-const settingsBtn = document.getElementById("settingsBtn");
+const zoneButtons = document.querySelectorAll(".fridge-zone");
 
 let fridgeSections = [];
 let currentSection = null;
 
-/* =========================
-   3. 從雲端讀取冰箱區域
-========================= */
-
 async function loadFridgeSections() {
-
   sectionTitle.textContent = "正在讀取冰箱資料...";
   itemsList.textContent = "請稍候";
 
   const { data, error } = await db
     .from("fridge_sections")
     .select("id, name, storage_type, sort_order")
+    .eq("household_id", HOUSEHOLD_ID)
     .order("sort_order", { ascending: true });
 
   if (error) {
-
-    console.error("讀取冰箱資料失敗：", error);
-
-    sectionTitle.textContent = "資料讀取失敗";
-
-    itemsList.textContent =
-      "請檢查 Supabase 連線及資料庫權限。";
-
+    sectionTitle.textContent = "讀取失敗";
+    itemsList.textContent = error.message;
     return;
   }
 
-  fridgeSections = data;
-
-  console.log("成功讀取冰箱區域：", fridgeSections);
+  fridgeSections = data || [];
 
   if (fridgeSections.length !== 5) {
-    sectionTitle.textContent = "冰箱區域數量不正確";
+    sectionTitle.textContent = "冰箱區域數量異常";
     itemsList.textContent =
       `目前讀取到 ${fridgeSections.length} 個區域，預期為 5 個。`;
     return;
   }
 
-  sectionTitle.textContent = "冰箱資料讀取成功";
+  sectionTitle.textContent = "我的冰箱";
+  itemsList.textContent = "請選擇一個冰箱區域查看物品。";
 
-  itemsList.textContent =
-    "已成功連接雲端，共讀取到五個冰箱區域。";
-
+  zoneButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      selectSection(button.dataset.section);
+    });
+  });
 }
 
-/* =========================
-   4. 選取冰箱區域
-========================= */
-
-function selectSection(sectionName) {
-
+async function selectSection(sectionName) {
   const section = fridgeSections.find(
     item => item.name === sectionName
   );
 
-  if (!section) return;
+  if (!section) {
+    sectionTitle.textContent = "找不到冰箱區域";
+    itemsList.textContent = "請確認區域名稱是否正確。";
+    return;
+  }
 
   currentSection = section;
 
-  zoneButtons.forEach(button => {
+  sectionTitle.textContent = section.name;
+  itemsList.textContent = "正在讀取物品...";
 
-    button.classList.toggle(
-      "selected",
-      button.dataset.section === sectionName
+  const { data, error } = await db
+    .from("items")
+    .select("*")
+    .eq("household_id", HOUSEHOLD_ID)
+    .eq("section_id", section.id)
+    .order("expires_at", { ascending: true, nullsFirst: false });
+
+  if (error) {
+    itemsList.textContent = "物品讀取失敗：" + error.message;
+    return;
+  }
+
+  renderItems(data || []);
+}
+
+function renderItems(items) {
+  itemsList.innerHTML = "";
+
+  if (items.length === 0) {
+    itemsList.textContent = "這個區域目前沒有登記物品。";
+    return;
+  }
+
+  items.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "item-card";
+
+    const name = document.createElement("h3");
+    name.textContent = item.name;
+
+    const details = document.createElement("p");
+    details.textContent =
+      `數量：${item.quantity} ${item.unit}`;
+
+    const purchased = document.createElement("p");
+    purchased.textContent =
+      `購買日期：${item.purchased_at || "未填寫"}`;
+
+    const expires = document.createElement("p");
+    expires.textContent =
+      `到期日：${item.expires_at || "未填寫"}`;
+
+    const opened = document.createElement("p");
+    opened.textContent =
+      `開封日期：${item.opened_at || "未填寫"}`;
+
+    const notes = document.createElement("p");
+    notes.textContent =
+      `備註：${item.notes || "無"}`;
+
+    card.append(
+      name,
+      details,
+      purchased,
+      expires,
+      opened,
+      notes
     );
 
+    itemsList.appendChild(card);
   });
-
-  sectionTitle.textContent =
-    `${section.name}（${section.storage_type}）`;
-
-  itemsList.textContent =
-    "此區目前尚未載入物品資料。";
-
-  console.log("目前選取區域：", section);
-
 }
-
-/* =========================
-   5. 區域點擊事件
-========================= */
-
-zoneButtons.forEach(button => {
-
-  button.addEventListener("click", () => {
-
-    selectSection(button.dataset.section);
-
-  });
-
-});
-
-/* =========================
-   6. 設定按鈕
-========================= */
-
-if (settingsBtn) {
-
-  settingsBtn.addEventListener("click", () => {
-
-    alert("設定功能將於後續版本加入。");
-
-  });
-
-}
-
-/* =========================
-   7. 啟動
-========================= */
-
-console.log("冰箱工具開始啟動");
 
 loadFridgeSections();
