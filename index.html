@@ -1,119 +1,87 @@
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#e8f4f7">
-  <title>我的冰箱｜冰箱物品管理</title>
+  <meta name="theme-color" content="#f4f1eb">
+  <meta name="description" content="羊管家冰箱物品登記工具，輕鬆管理冰箱五個收納區域。">
+  <title>羊管家的冰箱｜冰箱物品管理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <header class="header">
-    <h1>我的冰箱</h1>
-    <button id="settingsBtn" aria-label="設定">⚙️</button>
+    <div class="brand-mark" aria-hidden="true">♧</div>
+    <h1>羊管家的冰箱</h1>
+    <button id="settingsBtn" aria-label="設定" title="設定">⚙</button>
   </header>
 
   <main class="container">
+    <section class="fridge-area" aria-labelledby="heroTitle">
+      <div class="intro-copy">
+        <p class="eyebrow">LITTLE FRIDGE KEEPER</p>
+        <h2 id="heroTitle">今天冰箱裡有什麼？</h2>
+        <p>選一個收納區域，看看裡面放了哪些食材吧。</p>
+      </div>
 
-    <section class="fridge-area">
-      <h2>今天冰箱裡有什麼？</h2>
-      <p>點選冰箱區域，查看裡面的物品</p>
-
-      <div class="fridge">
-
-        <button class="fridge-zone top-zone" data-section="上層冷藏室">
-          <span>上層冷藏室</span>
-          <small>冷藏</small>
-        </button>
-
-        <div class="middle-small-zones">
-          <button class="fridge-zone" data-section="左中小抽屜">
-            <span>左中小抽屜</span>
-            <small>製冰</small>
+      <div class="fridge-scene">
+        <img class="fridge-art" src="fridge-illustration.svg" alt="羊管家守護著五區冰箱，旁邊有提示對話框和正在睡覺的貓咪">
+        <div class="fridge-hotspots" aria-label="冰箱收納區域">
+          <button class="fridge-zone top-zone" data-section="上層冷藏室" aria-label="上層冷藏室，冷藏">
+            <span>上層冷藏室</span><small>冷藏</small>
           </button>
-
-          <button class="fridge-zone" data-section="右中小抽屜">
-            <span>右中小抽屜</span>
-            <small>冷凍</small>
+          <div class="middle-small-zones">
+            <button class="fridge-zone" data-section="左中小抽屜" aria-label="左中小抽屜，製冰">
+              <span>左中小抽屜</span><small>製冰</small>
+            </button>
+            <button class="fridge-zone" data-section="右中小抽屜" aria-label="右中小抽屜，冷凍">
+              <span>右中小抽屜</span><small>冷凍</small>
+            </button>
+          </div>
+          <button class="fridge-zone middle-zone" data-section="中層抽屜" aria-label="中層抽屜，冷凍">
+            <span>中層抽屜</span><small>冷凍</small>
+          </button>
+          <button class="fridge-zone bottom-zone" data-section="下層抽屜" aria-label="下層抽屜，冷藏">
+            <span>下層抽屜</span><small>冷藏</small>
           </button>
         </div>
-
-        <button class="fridge-zone middle-zone" data-section="中層抽屜">
-          <span>中層抽屜</span>
-          <small>冷凍</small>
-        </button>
-
-        <button class="fridge-zone bottom-zone" data-section="下層抽屜">
-          <span>下層抽屜</span>
-          <small>冷藏</small>
-        </button>
-
       </div>
+      <p class="scene-caption">點選冰箱上的區域，即可查看或登記物品</p>
     </section>
 
-    <section class="items-area" id="itemsArea">
-      
-<h2 id="sectionTitle">我的冰箱</h2>
-
-<form id="itemForm" hidden>
-  <h3>新增冰箱物品</h3>
-
-  <label for="itemName">物品名稱</label>
-  <input
-    id="itemName"
-    type="text"
-    placeholder="例如：鮮奶"
-    required
-  >
-
-  <label for="itemQuantity">數量</label>
-  <input
-    id="itemQuantity"
-    type="number"
-    min="0.01"
-    step="any"
-    value="1"
-    required
-  >
-
-  <label for="itemUnit">單位</label>
-  <input
-    id="itemUnit"
-    type="text"
-    value="個"
-    placeholder="例如：個、包、瓶"
-    required
-  >
-
-  <label for="itemPurchasedAt">購買日期</label>
-  <input id="itemPurchasedAt" type="date">
-
-  <label for="itemExpiresAt">到期日</label>
-  <input id="itemExpiresAt" type="date">
-
-  <label for="itemOpenedAt">開封日期</label>
-  <input id="itemOpenedAt" type="date">
-
-  <label for="itemNotes">備註</label>
-  <textarea
-    id="itemNotes"
-    placeholder="例如：已拆封、放在後方"
-  ></textarea>
-
-  <button type="submit">儲存物品</button>
-</form>
-
-<div id="itemsList"></div>
-
-        <p>點選上方冰箱，即可查看該區域物品。</p>
+    <section class="items-area" id="itemsArea" aria-live="polite">
+      <div class="list-heading">
+        <span class="heading-icon" aria-hidden="true">✿</span>
+        <div>
+          <p class="eyebrow">YOUR FOOD LIST</p>
+          <h2 id="sectionTitle">我的冰箱</h2>
+        </div>
       </div>
+      <div class="list-hint">先選擇左側冰箱區域，就能開始管理物品。</div>
+      <form id="itemForm" hidden>
+        <h3>新增冰箱物品</h3>
+        <label for="itemName">物品名稱</label>
+        <input id="itemName" type="text" placeholder="例如：鮮奶" required>
+        <label for="itemQuantity">數量</label>
+        <input id="itemQuantity" type="number" min="0.01" step="any" value="1" required>
+        <label for="itemUnit">單位</label>
+        <input id="itemUnit" type="text" value="個" placeholder="例如：個、包、瓶" required>
+        <label for="itemPurchasedAt">購買日期</label>
+        <input id="itemPurchasedAt" type="date">
+        <label for="itemExpiresAt">到期日</label>
+        <input id="itemExpiresAt" type="date">
+        <label for="itemOpenedAt">開封日期</label>
+        <input id="itemOpenedAt" type="date">
+        <label for="itemNotes">備註</label>
+        <textarea id="itemNotes" placeholder="例如：已拆封、放在後方"></textarea>
+        <button type="submit" class="save-button">儲存物品</button>
+      </form>
+      <div id="itemsList"></div>
     </section>
-
   </main>
 
+  <footer class="footer-note">由羊管家細心整理・讓每份食材都有自己的位置</footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
