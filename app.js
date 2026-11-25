@@ -179,12 +179,49 @@ function renderItems(items) {
     const quantity = document.createElement("span");
     quantity.textContent = `${item.quantity} ${item.unit}`;
 
-    const expiry = document.createElement("span");
-    expiry.textContent = item.expires_at
-      ? `到期：${item.expires_at}`
-      : "未設定到期日";
 
-    summary.append(quantity, expiry);
+const expiry = document.createElement("span");
+
+if (item.expires_at) {
+  // 使用本地日期比較，避免時區造成日期偏移
+  const [year, month, day] = item.expires_at
+    .split("-")
+    .map(Number);
+
+  const expiryDate = new Date(year, month - 1, day);
+  const today = new Date();
+
+  today.setHours(0, 0, 0, 0);
+
+  const diffDays = Math.round(
+    (expiryDate - today) / (1000 * 60 * 60 * 24)
+  );
+
+  expiry.classList.add("expiry-status");
+
+  if (diffDays < 0) {
+    expiry.classList.add("expired");
+    expiry.textContent = `已過期 ${Math.abs(diffDays)} 天`;
+  } else if (diffDays <= 3) {
+    expiry.classList.add("expiring-soon");
+
+    expiry.textContent = diffDays === 0
+      ? "今天到期"
+      : `即將到期・剩 ${diffDays} 天`;
+  } else if (diffDays <= 7) {
+    expiry.classList.add("expiring-warning");
+    expiry.textContent = `注意到期・剩 ${diffDays} 天`;
+  } else {
+    expiry.classList.add("expiry-normal");
+    expiry.textContent = `到期：${item.expires_at}`;
+  }
+} else {
+  expiry.classList.add("expiry-normal");
+  expiry.textContent = "未設定到期日";
+}
+
+summary.append(quantity, expiry);
+
     main.append(name, summary);
 
     const actions = document.createElement("div");
