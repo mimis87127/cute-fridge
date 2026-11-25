@@ -16,6 +16,31 @@ const itemForm = document.getElementById("itemForm");
 
 let fridgeSections = [];
 let currentSection = null;
+let editingItemId = null;
+
+const submitButton = itemForm.querySelector(
+  'button[type="submit"]'
+);
+
+// 建立取消編輯按鈕
+const cancelButton = document.createElement("button");
+cancelButton.type = "button";
+cancelButton.textContent = "取消編輯";
+cancelButton.hidden = true;
+itemForm.appendChild(cancelButton);
+
+cancelButton.addEventListener("click", resetForm);
+
+function resetForm() {
+  editingItemId = null;
+  itemForm.reset();
+
+  document.getElementById("itemQuantity").value = 1;
+  document.getElementById("itemUnit").value = "個";
+
+  submitButton.textContent = "儲存物品";
+  cancelButton.hidden = true;
+}
 
 async function loadFridgeSections() {
   sectionTitle.textContent = "正在讀取冰箱資料...";
@@ -66,10 +91,10 @@ async function selectSection(sectionName) {
   }
 
   currentSection = section;
+  resetForm();
 
   sectionTitle.textContent = section.name;
   itemForm.hidden = false;
-  itemsList.textContent = "正在讀取物品...";
 
   await loadItems();
 }
@@ -130,17 +155,83 @@ function renderItems(items) {
     notes.textContent =
       `備註：${item.notes || "無"}`;
 
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.textContent = "編輯";
+    editButton.addEventListener("click", () => {
+      startEdit(item);
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.textContent = "刪除";
+    deleteButton.addEventListener("click", () => {
+      deleteItem(item);
+    });
+
     card.append(
       name,
       details,
       purchased,
       expires,
       opened,
-      notes
+      notes,
+      editButton,
+      deleteButton
     );
 
     itemsList.appendChild(card);
   });
+}
+
+function startEdit(item) {
+  editingItemId = item.id;
+
+  document.getElementById("itemName").value = item.name;
+  document.getElementById("itemQuantity").value = item.quantity;
+  document.getElementById("itemUnit").value = item.unit;
+  document.getElementById("itemPurchasedAt").value =
+    item.purchased_at || "";
+  document.getElementById("itemExpiresAt").value =
+    item.expires_at || "";
+  document.getElementById("itemOpenedAt").value =
+    item.opened_at || "";
+  document.getElementById("itemNotes").value =
+    item.notes || "";
+
+  submitButton.textContent = "更新物品";
+  cancelButton.hidden = false;
+
+  itemForm.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+async function deleteItem(item) {
+  const confirmed = confirm(
+    `確定要刪除「${item.name}」嗎？此操作無法復原。`
+  );
+
+  if (!confirmed) return;
+
+  const { error } = await db
+    .from("items")
+    .delete()
+    .eq("id", item.id)
+    .eq("household_id", HOUSEHOLD_ID);
+
+  if (error) {
+    alert("刪除失敗：" + error.message);
+    return;
+  }
+
+  if (editingItemId === item.id) {
+    resetForm();
+  }
+
+  alert("物品已刪除。");
+  await loadItems();
 }
 
 itemForm.addEventListener("submit", async event => {
@@ -151,12 +242,8 @@ itemForm.addEventListener("submit", async event => {
     return;
   }
 
-  const submitButton = itemForm.querySelector(
-    'button[type="submit"]'
-  );
-
   submitButton.disabled = true;
-  submitButton.textContent = "正在儲存...";
+  cancelButton.disabled = true;
 
   const newItem = {
     household_id: HOUSEHOLD_ID,
@@ -173,34 +260,50 @@ itemForm.addEventListener("submit", async event => {
     opened_at:
       document.getElementById("itemOpenedAt").value || null,
     notes:
-      document.getElementById("itemNotes").value.trim() || null
+      document.getElementById("itemNotes").value.trim() || null,
+    updated_at: new Date().toISOString()
   };
 
-  if (!newItem.name || !newItem.unit || newItem.quantity <= 0) {
+  if (
+    !newItem.name ||
+    !newItem.unit ||
+    !Number.isFinite(newItem.quantity) ||
+    newItem.quantity <= 0
+  ) {
     alert("請確認物品名稱、數量及單位。");
     submitButton.disabled = false;
-    submitButton.textContent = "儲存物品";
+    cancelButton.disabled = false;
     return;
   }
 
-  const { error } = await db
-    .from("items")
-    .insert(newItem);
+  let error;
+
+  if (editingItemId) {
+    const result = await db
+      .from("items")
+      .update(newItem)
+      .eq("id", editingItemId)
+      .eq("household_id", HOUSEHOLD_ID);
+
+    error = result.error;
+  } else {
+    const result = await db
+      .from("items")
+      .insert(newItem);
+
+    error = result.error;
+  }
 
   if (error) {
     alert("儲存失敗：" + error.message);
   } else {
-    alert("物品已成功新增！");
-    itemForm.reset();
-
-    document.getElementById("itemQuantity").value = 1;
-    document.getElementById("itemUnit").value = "個";
-
+    alert(editingItemId ? "物品更新成功！" : "物品新增成功！");
+    resetForm();
     await loadItems();
   }
 
   submitButton.disabled = false;
-  submitButton.textContent = "儲存物品";
+  cancelButton.disabled = false;
 });
 
 loadFridgeSections();
