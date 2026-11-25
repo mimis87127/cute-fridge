@@ -164,7 +164,31 @@ function renderItems(items) {
 
   items.forEach(item => {
     const row = document.createElement("li");
-    row.className = "item-row";
+row.className = "item-row";
+
+// 根據到期日決定整列底色
+if (item.expires_at) {
+  const [year, month, day] = item.expires_at
+    .split("-")
+    .map(Number);
+
+  const expiryDate = new Date(year, month - 1, day);
+  const today = new Date();
+
+  today.setHours(0, 0, 0, 0);
+
+  const diffDays = Math.round(
+    (expiryDate - today) / (1000 * 60 * 60 * 24)
+  );
+
+  if (diffDays < 0) {
+    row.classList.add("expired");
+  } else if (diffDays <= 3) {
+    row.classList.add("expiring-soon");
+  } else if (diffDays <= 7) {
+    row.classList.add("expiring-warning");
+  }
+}
 
     const main = document.createElement("div");
     main.className = "item-main";
