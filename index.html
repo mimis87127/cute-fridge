@@ -54,8 +54,59 @@
     </section>
 
     <section class="items-area" id="itemsArea">
-      <h2 id="sectionTitle">請選擇冰箱區域</h2>
-      <div id="itemsList">
+      
+<h2 id="sectionTitle">我的冰箱</h2>
+
+<form id="itemForm" hidden>
+  <h3>新增冰箱物品</h3>
+
+  <label for="itemName">物品名稱</label>
+  <input
+    id="itemName"
+    type="text"
+    placeholder="例如：鮮奶"
+    required
+  >
+
+  <label for="itemQuantity">數量</label>
+  <input
+    id="itemQuantity"
+    type="number"
+    min="0.01"
+    step="any"
+    value="1"
+    required
+  >
+
+  <label for="itemUnit">單位</label>
+  <input
+    id="itemUnit"
+    type="text"
+    value="個"
+    placeholder="例如：個、包、瓶"
+    required
+  >
+
+  <label for="itemPurchasedAt">購買日期</label>
+  <input id="itemPurchasedAt" type="date">
+
+  <label for="itemExpiresAt">到期日</label>
+  <input id="itemExpiresAt" type="date">
+
+  <label for="itemOpenedAt">開封日期</label>
+  <input id="itemOpenedAt" type="date">
+
+  <label for="itemNotes">備註</label>
+  <textarea
+    id="itemNotes"
+    placeholder="例如：已拆封、放在後方"
+  ></textarea>
+
+  <button type="submit">儲存物品</button>
+</form>
+
+<div id="itemsList"></div>
+
         <p>點選上方冰箱，即可查看該區域物品。</p>
       </div>
     </section>
