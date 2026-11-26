@@ -60,6 +60,18 @@
       <div class="list-hint">先選擇左側冰箱區域，就能開始管理物品。</div>
       <form id="itemForm" hidden>
         <h3>新增冰箱物品</h3>
+        <button type="button" id="openBarcodeScan" class="save-button">
+  掃描商品條碼
+</button>
+
+<div id="barcodeScanPanel" hidden>
+  <h3>掃描商品條碼</h3>
+  <div id="barcodeReader"></div>
+  <p id="barcodeStatus">請將商品條碼對準相機</p>
+  <button type="button" id="closeBarcodeScan" class="cancel-button">
+    關閉掃描
+  </button>
+</div>
         <label for="itemName">物品名稱</label>
         <input id="itemName" type="text" placeholder="例如：鮮奶" required>
         <label for="itemQuantity">數量</label>
