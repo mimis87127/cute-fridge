@@ -138,3 +138,26 @@ button { cursor: pointer; }
   .item-actions { gap: 4px; }
   .item-actions button { padding: 8px; font-size: 12px; }
 }
+/* =========================
+   熱區只顯示半透明框，文字以圖片為主
+========================= */
+.fridge-zone span,
+.fridge-zone small {
+  display: none;
+}
+
+.fridge-zone {
+  background: rgba(255, 255, 255, 0.18);
+  border: 2px dashed rgba(95, 140, 125, 0.6);
+  text-shadow: none;
+}
+
+.fridge-zone:hover,
+.fridge-zone:focus,
+.fridge-zone:focus-visible {
+  outline: none;
+  background: rgba(127, 174, 152, 0.28);
+  border: 3px solid #6fa58c;
+  box-shadow: 0 0 0 3px rgba(145, 181, 164, 0.3);
+  transform: none;
+}
