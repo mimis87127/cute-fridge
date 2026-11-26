@@ -341,6 +341,7 @@ itemForm.addEventListener("submit", async event => {
     household_id: HOUSEHOLD_ID,
     section_id: currentSection.id,
     name: document.getElementById("itemName").value.trim(),
+    barcode: scannedBarcode || null,
     quantity: Number(
       document.getElementById("itemQuantity").value
     ),
