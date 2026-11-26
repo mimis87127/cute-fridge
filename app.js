@@ -435,5 +435,82 @@ refreshDataBtn.addEventListener("click", async () => {
   refreshDataBtn.disabled = false;
   refreshDataBtn.textContent = "重新讀取冰箱資料";
 });
+// ===== 商品條碼掃描 =====
+const openBarcodeScanBtn =
+  document.getElementById("openBarcodeScan");
+
+const closeBarcodeScanBtn =
+  document.getElementById("closeBarcodeScan");
+
+const barcodeScanPanel =
+  document.getElementById("barcodeScanPanel");
+
+const barcodeStatus =
+  document.getElementById("barcodeStatus");
+
+let barcodeScanner = null;
+let isBarcodeScanning = false;
+
+// 開啟相機
+openBarcodeScanBtn.addEventListener("click", async () => {
+  barcodeScanPanel.hidden = false;
+  barcodeStatus.textContent = "正在啟動相機，請允許使用相機";
+
+  if (!window.Html5Qrcode) {
+    barcodeStatus.textContent = "掃描套件載入失敗，請重新整理網頁";
+    return;
+  }
+
+  try {
+    if (!barcodeScanner) {
+      barcodeScanner = new Html5Qrcode("barcodeReader");
+    }
+
+    await barcodeScanner.start(
+      { facingMode: "environment" },
+      {
+        fps: 10,
+        qrbox: { width: 250, height: 150 },
+        formatsToSupport: [
+          Html5QrcodeSupportedFormats.EAN_13,
+          Html5QrcodeSupportedFormats.EAN_8,
+          Html5QrcodeSupportedFormats.UPC_A,
+          Html5QrcodeSupportedFormats.UPC_E,
+          Html5QrcodeSupportedFormats.CODE_128
+        ]
+      },
+      async (decodedText) => {
+        if (!isBarcodeScanning) return;
+
+        isBarcodeScanning = false;
+
+        await barcodeScanner.stop();
+
+        barcodeStatus.textContent =
+          "掃描成功！條碼：" + decodedText;
+      },
+      () => {}
+    );
+
+    isBarcodeScanning = true;
+    barcodeStatus.textContent = "請將商品條碼對準掃描框";
+
+  } catch (error) {
+    isBarcodeScanning = false;
+    barcodeStatus.textContent =
+      "相機啟動失敗，請確認網站相機權限：" + error;
+  }
+});
+
+// 關閉掃描
+closeBarcodeScanBtn.addEventListener("click", async () => {
+  if (isBarcodeScanning && barcodeScanner) {
+    isBarcodeScanning = false;
+    await barcodeScanner.stop();
+  }
+
+  barcodeScanPanel.hidden = true;
+  barcodeStatus.textContent = "請將商品條碼對準相機";
+});
 
 loadFridgeSections();
