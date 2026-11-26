@@ -276,6 +276,7 @@ summary.append(quantity, expiry);
 
 function startEdit(item) {
   editingItemId = item.id;
+  scannedBarcode = item.barcode || "";
 
   document.getElementById("itemName").value = item.name;
   document.getElementById("itemQuantity").value = item.quantity;
