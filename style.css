@@ -231,3 +231,54 @@ button { cursor: pointer; }
 .settings-status{min-height:22px}
 .settings-zone-list{margin:0;padding:0;list-style:none}
 .settings-zone-list li{padding:9px 10px;margin-top:6px;border-radius:9px;background:#f5f4ed;color:#738177;font-size:14px}
+/* =========================
+   新增物品表單：數量+單位一列、三個日期一列
+========================= */
+#itemForm:not([hidden]) {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: 10px;
+  align-items: end;
+}
+
+/* 其他欄位維持整列 */
+#itemForm > * {
+  grid-column: 1 / -1;
+}
+
+/* 紅區：數量＋單位 */
+#itemForm label[for="itemQuantity"] { grid-row: 4; grid-column: 1 / 4; }
+#itemForm label[for="itemUnit"]     { grid-row: 4; grid-column: 4 / 7; }
+#itemQuantity                       { grid-row: 5; grid-column: 1 / 4; }
+#itemUnit                           { grid-row: 5; grid-column: 4 / 7; }
+
+/* 黃區：購買日期＋到期日＋開封日期 */
+#itemForm label[for="itemPurchasedAt"] { grid-row: 6; grid-column: 1 / 3; }
+#itemForm label[for="itemExpiresAt"]   { grid-row: 6; grid-column: 3 / 5; }
+#itemForm label[for="itemOpenedAt"]    { grid-row: 6; grid-column: 5 / 7; }
+#itemPurchasedAt                       { grid-row: 7; grid-column: 1 / 3; }
+#itemExpiresAt                         { grid-row: 7; grid-column: 3 / 5; }
+#itemOpenedAt                          { grid-row: 7; grid-column: 5 / 7; }
+
+#itemForm input,
+#itemForm textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+#itemForm input[type="date"] {
+  padding-left: 8px;
+  padding-right: 6px;
+  font-size: 15px;
+}
+
+/* 手機：三個日期並排太擠，改回上下排列 */
+@media (max-width: 520px) {
+  #itemForm label[for="itemPurchasedAt"] { grid-row: 6;  grid-column: 1 / -1; }
+  #itemPurchasedAt                       { grid-row: 7;  grid-column: 1 / -1; }
+  #itemForm label[for="itemExpiresAt"]   { grid-row: 8;  grid-column: 1 / -1; }
+  #itemExpiresAt                         { grid-row: 9;  grid-column: 1 / -1; }
+  #itemForm label[for="itemOpenedAt"]    { grid-row: 10; grid-column: 1 / -1; }
+  #itemOpenedAt                          { grid-row: 11; grid-column: 1 / -1; }
+}
