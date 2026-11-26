@@ -161,3 +161,58 @@ button { cursor: pointer; }
   box-shadow: 0 0 0 3px rgba(145, 181, 164, 0.3);
   transform: none;
 }
+/* =========================
+   熱區精準對齊原圖（依 1254×1254 原圖實測）
+========================= */
+.fridge-hotspots {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  padding: 0;
+}
+
+.middle-small-zones {
+  display: contents;
+}
+
+.fridge-zone {
+  border-radius: 6px;
+}
+
+/* 上層冷藏室 */
+.fridge-zone.top-zone {
+  position: absolute;
+  left: 31.26%; top: 11.64%; width: 38.60%; height: 29.03%;
+  margin: 0;
+}
+
+/* 左中小抽屜 */
+.middle-small-zones .fridge-zone:first-child {
+  position: absolute;
+  left: 31.26%; top: 42.19%; width: 18.74%; height: 12.60%;
+  margin: 0;
+}
+
+/* 右中小抽屜 */
+.middle-small-zones .fridge-zone:last-child {
+  position: absolute;
+  left: 51.04%; top: 42.19%; width: 18.82%; height: 12.60%;
+  margin: 0;
+}
+
+/* 中層抽屜 */
+.fridge-zone.middle-zone {
+  position: absolute;
+  left: 31.26%; top: 56.06%; width: 38.60%; height: 14.59%;
+  margin: 0;
+}
+
+/* 下層抽屜 */
+.fridge-zone.bottom-zone {
+  position: absolute;
+  left: 31.26%; top: 72.17%; width: 38.60%; height: 21.69%;
+  margin: 0;
+}
