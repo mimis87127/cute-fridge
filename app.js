@@ -449,6 +449,7 @@ const barcodeStatus =
   document.getElementById("barcodeStatus");
 
 let barcodeScanner = null;
+let scannedBarcode = "";
 let isBarcodeScanning = false;
 
 // 開啟相機
