@@ -96,5 +96,15 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
   <script src="https://unpkg.com/html5-qrcode"></script>
+  <!-- 條碼掃描介面 -->
+<div id="barcodeScanPanel" hidden>
+  <h3>掃描商品條碼</h3>
+  <div id="barcodeReader"></div>
+  <p id="barcodeStatus">請將商品條碼對準相機</p>
+  <button type="button" id="closeBarcodeScan">關閉掃描</button>
+</div>
+  <button type="button" id="openBarcodeScan">
+  掃描商品條碼
+</button>
 </body>
 </html>
