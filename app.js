@@ -479,16 +479,57 @@ openBarcodeScanBtn.addEventListener("click", async () => {
           Html5QrcodeSupportedFormats.CODE_128
         ]
       },
-      async (decodedText) => {
-        if (!isBarcodeScanning) return;
+async (decodedText) => {
+  if (!isBarcodeScanning) return;
 
-        isBarcodeScanning = false;
+  isBarcodeScanning = false;
 
-        await barcodeScanner.stop();
+  await barcodeScanner.stop();
 
-        barcodeStatus.textContent =
-          "掃描成功！條碼：" + decodedText;
-      },
+  barcodeStatus.textContent = "正在查詢商品資料……";
+
+  try {
+    const response = await fetch(
+      `https://world.openfoodfacts.org/api/v3/product/${encodeURIComponent(decodedText)}?fields=code,product_name,generic_name,brands,quantity&lc=zh&cc=tw`
+    );
+
+    if (!response.ok) {
+      throw new Error("商品資料庫連線失敗");
+    }
+
+    const data = await response.json();
+    const product = data.product;
+
+    if (!product) {
+      barcodeStatus.textContent =
+        "找不到此商品，請手動輸入名稱。條碼：" + decodedText;
+      return;
+    }
+
+    const productName =
+      product.product_name ||
+      product.generic_name ||
+      "";
+
+    if (!productName) {
+      barcodeStatus.textContent =
+        "查到商品，但沒有商品名稱，請手動輸入。";
+      return;
+    }
+
+    document.getElementById("itemName").value = productName;
+
+    barcodeStatus.textContent =
+      "查詢成功！商品：" + productName +
+      (product.brands ? "｜品牌：" + product.brands : "") +
+      (product.quantity ? "｜包裝：" + product.quantity : "");
+
+  } catch (error) {
+    barcodeStatus.textContent =
+      "查詢失敗：" + error.message +
+      "，請手動輸入商品名稱。";
+  }
+},
       () => {}
     );
 
