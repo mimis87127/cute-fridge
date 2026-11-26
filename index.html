@@ -80,6 +80,25 @@
     </section>
   </main>
 
+  <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle">
+    <div class="settings-header">
+      <div><p class="eyebrow">FRIDGE SETTINGS</p><h2 id="settingsTitle">冰箱設定</h2></div>
+      <button type="button" id="closeSettingsBtn" class="dialog-close" aria-label="關閉設定">×</button>
+    </div>
+    <section class="settings-section">
+      <h3>資料同步</h3>
+      <p>冰箱物品儲存在雲端。其他裝置連線後會讀取同一份資料。</p>
+      <button type="button" id="refreshDataBtn" class="refresh-data-button">重新讀取冰箱資料</button>
+      <p id="settingsStatus" class="settings-status" role="status">選擇區域時會自動載入資料。</p>
+    </section>
+    <section class="settings-section">
+      <h3>冰箱區域</h3>
+      <ul class="settings-zone-list">
+        <li>上層冷藏室・冷藏</li><li>左中小抽屜・製冰</li>
+        <li>右中小抽屜・冷凍</li><li>中層抽屜・冷凍</li><li>下層抽屜・冷藏</li>
+      </ul>
+    </section>
+  </dialog>
   <footer class="footer-note">由羊管家細心整理・讓每份食材都有自己的位置</footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>

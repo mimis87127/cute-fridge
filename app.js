@@ -398,4 +398,42 @@ itemForm.addEventListener("submit", async event => {
   cancelButton.disabled = false;
 });
 
+
+/* Gear button: open a real settings panel */
+const settingsBtn = document.getElementById("settingsBtn");
+const settingsDialog = document.getElementById("settingsDialog");
+const closeSettingsBtn = document.getElementById("closeSettingsBtn");
+const refreshDataBtn = document.getElementById("refreshDataBtn");
+const settingsStatus = document.getElementById("settingsStatus");
+
+settingsBtn.addEventListener("click", () => settingsDialog.showModal());
+closeSettingsBtn.addEventListener("click", () => settingsDialog.close());
+settingsDialog.addEventListener("click", event => {
+  if (event.target === settingsDialog) settingsDialog.close();
+});
+refreshDataBtn.addEventListener("click", async () => {
+  refreshDataBtn.disabled = true;
+  refreshDataBtn.textContent = "正在重新讀取…";
+  settingsStatus.textContent = "正在更新資料…";
+  const previousSectionName = currentSection?.name || null;
+  await loadFridgeSections();
+  if (previousSectionName) {
+    const freshSection = fridgeSections.find(s => s.name === previousSectionName);
+    if (freshSection) {
+      currentSection = freshSection;
+      addItemButton.hidden = false;
+      sectionTitle.textContent = freshSection.name;
+      await loadItems();
+      settingsStatus.textContent = "資料已重新讀取。";
+    } else {
+      currentSection = null;
+      settingsStatus.textContent = "資料已更新，請重新選擇區域。";
+    }
+  } else {
+    settingsStatus.textContent = "資料已重新讀取，請選擇區域。";
+  }
+  refreshDataBtn.disabled = false;
+  refreshDataBtn.textContent = "重新讀取冰箱資料";
+});
+
 loadFridgeSections();
