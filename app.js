@@ -54,6 +54,7 @@ cancelButton.addEventListener("click", () => {
 
 function resetFormFields() {
   editingItemId = null;
+  scannedBarcode = "";
   itemForm.reset();
 
   document.getElementById("itemQuantity").value = 1;
