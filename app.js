@@ -483,6 +483,7 @@ openBarcodeScanBtn.addEventListener("click", async () => {
 async (decodedText) => {
   if (!isBarcodeScanning) return;
 
+  scannedBarcode = decodedText;
   isBarcodeScanning = false;
 
   await barcodeScanner.stop();
