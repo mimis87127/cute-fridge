@@ -417,3 +417,24 @@ button { cursor: pointer; }
     border-radius: 16px;
   }
 }
+/* =========================
+   加入分頁後，恢復冰箱頁左右兩欄
+========================= */
+.container > * {
+  grid-column: 1 / -1;
+}
+
+#fridgeTab:not([hidden]) {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(330px, 0.85fr);
+  gap: 24px;
+  align-items: center;
+}
+
+/* 平板、手機維持上下排列 */
+@media (max-width: 820px) {
+  #fridgeTab:not([hidden]) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
