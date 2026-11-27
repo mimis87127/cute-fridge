@@ -15,8 +15,16 @@
     <h1>羊管家的冰箱</h1>
     <button id="settingsBtn" aria-label="設定" title="設定">⚙</button>
   </header>
-
+<nav class="main-tabs" aria-label="功能分頁">
+  <button type="button" class="tab-button active" data-tab="fridge">
+    羊管家的冰箱
+  </button>
+  <button type="button" class="tab-button" data-tab="kitchen">
+    羊管家的廚房
+  </button>
+</nav>
   <main class="container">
+    <div id="fridgeTab" class="tab-page">
     <section class="fridge-area" aria-labelledby="heroTitle">
       <div class="intro-copy">
         <p class="eyebrow">LITTLE FRIDGE KEEPER</p>
@@ -93,6 +101,22 @@
       </form>
       <div id="itemsList"></div>
     </section>
+    </div>
+  <section id="kitchenTab" class="kitchen-page" hidden>
+  <div class="kitchen-heading">
+    <p class="eyebrow">LITTLE KITCHEN KEEPER</p>
+    <h2>羊管家的廚房</h2>
+    <p>讓羊管家一起整理廚房吧。</p>
+  </div>
+
+  <div class="kitchen-image-wrap">
+    <img
+      src="kitchen-home.png"
+      alt="羊管家的廚房"
+      class="kitchen-art"
+    >
+  </div>
+</section>
   </main>
 
   <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle">
