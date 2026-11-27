@@ -314,3 +314,106 @@ button { cursor: pointer; }
   text-shadow: none;
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
 }
+/* =========================
+   冰箱 / 廚房分頁
+========================= */
+
+.main-tabs {
+  max-width: 1180px;
+  margin: 18px auto 8px;
+  padding: 0 28px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  border: 1px solid #d9e2d9;
+  border-radius: 999px;
+  background: #fffdf8;
+  color: #75877b;
+  font-weight: 700;
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+.tab-button:hover {
+  background: #edf3e9;
+}
+
+.tab-button.active {
+  background: #91b5a4;
+  color: #fff;
+  border-color: #91b5a4;
+  box-shadow: 0 3px 0 rgba(100, 130, 112, 0.15);
+}
+
+.tab-page[hidden],
+.kitchen-page[hidden] {
+  display: none !important;
+}
+
+/* 廚房頁面 */
+
+.kitchen-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 20px 28px 38px;
+}
+
+.kitchen-heading {
+  text-align: center;
+  margin: 12px 0 22px;
+}
+
+.kitchen-heading h2 {
+  margin: 0 0 8px;
+  font-size: 25px;
+  color: #64786d;
+}
+
+.kitchen-heading p:last-child {
+  color: #87938a;
+  font-size: 15px;
+}
+
+.kitchen-image-wrap {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 24px;
+  background: rgba(255, 253, 248, 0.8);
+  border: 1px solid #e8e0d4;
+  box-shadow: 0 12px 35px rgba(104, 123, 110, 0.09);
+}
+
+.kitchen-art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 手機版分頁 */
+
+@media (max-width: 520px) {
+  .main-tabs {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .tab-button {
+    flex: 1;
+    padding: 11px 8px;
+    font-size: 14px;
+  }
+
+  .kitchen-page {
+    padding: 12px 12px 28px;
+  }
+
+  .kitchen-image-wrap {
+    border-radius: 16px;
+  }
+}
