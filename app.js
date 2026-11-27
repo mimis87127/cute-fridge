@@ -559,3 +559,26 @@ closeBarcodeScanBtn.addEventListener("click", async () => {
 });
 
 loadFridgeSections();
+// ===== 冰箱 / 廚房分頁切換 =====
+
+const tabButtons = document.querySelectorAll(".tab-button");
+const fridgeTab = document.getElementById("fridgeTab");
+const kitchenTab = document.getElementById("kitchenTab");
+
+tabButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    const selectedTab = button.dataset.tab;
+
+    // 切換頁面顯示
+    fridgeTab.hidden = selectedTab !== "fridge";
+    kitchenTab.hidden = selectedTab !== "kitchen";
+
+    // 切換按鈕樣式
+    tabButtons.forEach(tab => {
+      tab.classList.toggle(
+        "active",
+        tab.dataset.tab === selectedTab
+      );
+    });
+  });
+});
