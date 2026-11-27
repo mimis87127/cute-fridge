@@ -91,10 +91,9 @@ async function loadFridgeSections() {
 
   fridgeSections = data || [];
 
-  if (fridgeSections.length !== 5) {
-    sectionTitle.textContent = "冰箱區域數量異常";
-    itemsList.textContent =
-      `目前讀取到 ${fridgeSections.length} 個區域，預期為 5 個。`;
+  if (fridgeSections.length === 0) {
+    sectionTitle.textContent = "冰箱區域讀取異常";
+    itemsList.textContent = "目前沒有讀取到任何冰箱區域。";
     return;
   }
 
