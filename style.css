@@ -282,3 +282,29 @@ button { cursor: pointer; }
   #itemForm label[for="itemOpenedAt"]    { grid-row: 10; grid-column: 1 / -1; }
   #itemOpenedAt                          { grid-row: 11; grid-column: 1 / -1; }
 }
+/* =========================
+   零食區（左側架上罐子）
+========================= */
+.fridge-zone.snack-zone {
+  position: absolute;
+  left: 0.6%;
+  top: 30.5%;
+  width: 21%;
+  height: 13.2%;
+  margin: 0;
+}
+
+/* 零食區圖上沒有文字，所以這區要顯示標籤 */
+.fridge-zone.snack-zone span {
+  display: inline-block;
+  margin-top: auto;
+  margin-bottom: 6%;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: #f2b25c;
+  color: #fff;
+  font-size: clamp(12px, 1.6vw, 17px);
+  font-weight: 700;
+  text-shadow: none;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+}
